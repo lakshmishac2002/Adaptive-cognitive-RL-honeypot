@@ -1,0 +1,25 @@
+{
+  "avg_reward": 5266.7,
+  "std_reward": 3316.73159676812,
+  "min_reward": 1120.0,
+  "max_reward": 11805.0,
+  "attack_performance": {
+    "port_scan": 11805.0,
+    "ssh_bruteforce": 4240.0,
+    "sql_injection": 4240.0,
+    "xss": 11805.0,
+    "ddos": 4240.0,
+    "malware": 1120.0,
+    "directory_traversal": 4240.0,
+    "command_injection": 4240.0,
+    "zero_day": 3877.5
+  },
+  "action_distribution": {
+    "respond_realistic": 8900,
+    "delay_response": 0,
+    "fake_error": 0,
+    "fake_data": 0,
+    "redirect_deep": 0,
+    "block": 0
+  }
+}
