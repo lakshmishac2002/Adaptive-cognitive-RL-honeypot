@@ -135,7 +135,7 @@ class ModelEvaluator:
         print()
         
         # 1. Overall Performance
-        print("📊 OVERALL PERFORMANCE")
+        print(" OVERALL PERFORMANCE")
         print("-" * 70)
         rewards = self.results['episode_rewards']
         print(f"Average Reward:     {np.mean(rewards):8.2f} ± {np.std(rewards):.2f}")
@@ -179,7 +179,7 @@ class ModelEvaluator:
         if diversity_pct > 75:
             print(" EXCELLENT diversity!")
         elif diversity_pct > 60:
-            print("✓ Good diversity")
+            print(" Good diversity")
         else:
             print("  Low diversity")
         
@@ -221,7 +221,7 @@ class ModelEvaluator:
         print()
         
         # 5. Engagement Metrics
-        print("⏱️  ENGAGEMENT METRICS")
+        print("  ENGAGEMENT METRICS")
         print("-" * 70)
         engagement_times = self.results['engagement_times']
         print(f"Average Engagement:  {np.mean(engagement_times):.1f} steps")
