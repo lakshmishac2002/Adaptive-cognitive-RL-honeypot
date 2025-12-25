@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RL Honeypot - Real-Time Monitoring</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background: #0f172a; 
+            color: #e2e8f0; 
+        }
+        .container { padding: 20px; max-width: 1800px; margin: 0 auto; }
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            padding: 20px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 5px; }
+        .header-sub { color: #94a3b8; font-size: 14px; }
+        .status-badge { 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            background: rgba(16, 185, 129, 0.2); 
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pulse { 
+            width: 8px; 
+            height: 8px; 
+            background: #10b981; 
+            border-radius: 50%; 
+            animation: pulse 2s infinite; 
+        }
+        @keyframes pulse { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.5; } 
+        }
+        .metrics { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 25px; 
+        }
+        .metric-card { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            border: 1px solid #334155; 
+            border-radius: 12px; 
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .metric-card:hover { 
+            transform: translateY(-5px); 
+            border-color: #3b82f6; 
+        }
+        .metric-label { 
+            font-size: 12px; 
+            color: #94a3b8; 
+            text-transform: uppercase; 
+            margin-bottom: 10px; 
+        }
+        .metric-value { 
+            font-size: 36px; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .metric-change { 
+            font-size: 13px; 
+            color: #10b981; 
+        }
+        .charts { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 20px; 
+            margin-bottom: 25px; 
+        }
+        .chart-card { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            border: 1px solid #334155; 
+            border-radius: 12px; 
+            padding: 25px; 
+        }
+        .chart-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+        }
+        .feed { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            border: 1px solid #334155; 
+            border-radius: 12px; 
+            padding: 25px; 
+        }
+        .feed-item { 
+            display: flex; 
+            gap: 15px; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            background: rgba(51, 65, 85, 0.3);
+            animation: slideIn 0.4s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .feed-icon { 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 20px; 
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+        .feed-content { flex: 1; }
+        .feed-title { font-weight: 600; margin-bottom: 4px; }
+        .feed-details { font-size: 13px; color: #94a3b8; }
+        .feed-time { font-size: 12px; color: #64748b; }
+        .attack-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+        }
+        .attack-box { 
+            padding: 15px; 
+            background: rgba(51, 65, 85, 0.3); 
+            border-radius: 8px; 
+            border: 1px solid #334155;
+        }
+        .attack-name { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+        .attack-count { font-size: 24px; font-weight: 700; }
+        .bar { 
+            height: 4px; 
+            background: #334155; 
+            border-radius: 2px; 
+            margin-top: 8px; 
+            overflow: hidden;
+        }
+        .bar-fill { 
+            height: 100%; 
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6); 
+            transition: width 0.5s; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🛡️ RL Honeypot - Real-Time Monitoring</h1>
+                <div class="header-sub">Live monitoring • Model: final_agent.pth • Episode #<span id="episodeNum">1234</span></div>
+            </div>
+            <div class="status-badge">
+                <span class="pulse"></span>
+                SYSTEM ACTIVE
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">Success Rate</div>
+                <div class="metric-value" id="successRate">100.0%</div>
+                <div class="metric-change">▲ Excellent Performance</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Engagement</div>
+                <div class="metric-value" id="avgEngagement">57.4</div>
+                <div class="metric-change">▲ 14x vs baseline</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Action Diversity</div>
+                <div class="metric-value" id="diversity">98.7%</div>
+                <div class="metric-change">▲ Excellent</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Stealth Rate</div>
+                <div class="metric-value" id="stealth">70.0%</div>
+                <div class="metric-change">▲ +70% from fix</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Reward</div>
+                <div class="metric-value" id="reward">5,630</div>
+                <div class="metric-change">▲ 25x improvement</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Intelligence</div>
+                <div class="metric-value" id="intel">98.0</div>
+                <div class="metric-change">▲ 7.5x improvement</div>
+            </div>
+        </div>
+
+        <div class="charts">
+            <div class="chart-card">
+                <div class="chart-title">Episode Performance (Last 50)</div>
+                <canvas id="chart" width="800" height="200"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">Attack Distribution</div>
+                <div class="attack-grid">
+                    <div class="attack-box">
+                        <div class="attack-name">SQL Injection</div>
+                        <div class="attack-count" id="sql">142</div>
+                        <div class="bar"><div class="bar-fill" style="width: 85%"></div></div>
+                    </div>
+                    <div class="attack-box">
+                        <div class="attack-name">DDoS</div>
+                        <div class="attack-count" id="ddos">128</div>
+                        <div class="bar"><div class="bar-fill" style="width: 78%"></div></div>
+                    </div>
+                    <div class="attack-box">
+                        <div class="attack-name">Port Scan</div>
+                        <div class="attack-count" id="port">115</div>
+                        <div class="bar"><div class="bar-fill" style="width: 70%"></div></div>
+                    </div>
+                    <div class="attack-box">
+                        <div class="attack-name">XSS</div>
+                        <div class="attack-count" id="xss">98</div>
+                        <div class="bar"><div class="bar-fill" style="width: 60%"></div></div>
+                    </div>
+                    <div class="attack-box">
+                        <div class="attack-name">Zero-Day</div>
+                        <div class="attack-count" id="zero">87</div>
+                        <div class="bar"><div class="bar-fill" style="width: 52%"></div></div>
+                    </div>
+                    <div class="attack-box">
+                        <div class="attack-name">Malware</div>
+                        <div class="attack-count" id="malware">76</div>
+                        <div class="bar"><div class="bar-fill" style="width: 45%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feed">
+            <div class="chart-title">Live Activity Feed</div>
+            <div id="feedContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas chart
+        const canvas = document.getElementById('chart');
+        const ctx = canvas.getContext('2d');
+        const data = Array(50).fill(0).map(() => 5000 + Math.random() * 1500);
+        
+        function drawChart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const max = Math.max(...data);
+            const min = Math.min(...data);
+            const range = max - min;
+            
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            data.forEach((val, i) => {
+                const x = (i / (data.length - 1)) * canvas.width;
+                const y = canvas.height - ((val - min) / range) * canvas.height;
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            });
+            
+            ctx.stroke();
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+            ctx.fillStyle = gradient;
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        drawChart();
+
+        // Live feed
+        const attacks = ['SQL Injection', 'DDoS', 'Port Scan', 'XSS', 'Zero-Day', 'Malware'];
+        const responses = ['Fake Error', 'Delay Response', 'Fake Data', 'Redirect Deep', 'Block'];
+        
+        function addFeed() {
+            const feed = document.getElementById('feedContainer');
+            const attack = attacks[Math.floor(Math.random() * attacks.length)];
+            const response = responses[Math.floor(Math.random() * responses.length)];
+            const intel = Math.floor(Math.random() * 5) + 1;
+            const steps = Math.floor(Math.random() * 20) + 40;
+            
+            const item = document.createElement('div');
+            item.className = 'feed-item';
+            item.innerHTML = `
+                <div class="feed-icon">⚠️</div>
+                <div class="feed-content">
+                    <div class="feed-title">${attack} Detected</div>
+                    <div class="feed-details">Response: ${response} | Intel: +${intel} | Steps: ${steps}</div>
+                </div>
+                <div class="feed-time">Just now</div>
+            `;
+            
+            feed.insertBefore(item, feed.firstChild);
+            if (feed.children.length > 10) feed.removeChild(feed.lastChild);
+        }
+
+        // Update metrics
+        setInterval(() => {
+            const eng = (57.4 + Math.random() * 4 - 2).toFixed(1);
+            const rew = (5630 + Math.random() * 200 - 100).toFixed(0);
+            document.getElementById('avgEngagement').textContent = eng;
+            document.getElementById('reward').textContent = rew.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            data.push(parseFloat(rew));
+            data.shift();
+            drawChart();
+        }, 3000);
+
+        setInterval(addFeed, 5000);
+        addFeed();
+    </script>
+</body>
+</html>

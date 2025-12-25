@@ -1,0 +1,68 @@
+{
+  "model_path": "models/final_agent.pth",
+  "num_episodes": 100,
+  "timestamp": "2025-12-10T21:41:56.547199",
+  "overall_performance": {
+    "mean_reward": 127.34,
+    "std_reward": 103.68967836771411,
+    "median_reward": 108.5,
+    "min_reward": -4.5,
+    "max_reward": 505.0,
+    "mean_episode_length": 7.29
+  },
+  "action_distribution": {
+    "0": 158,
+    "3": 97,
+    "1": 127,
+    "4": 158,
+    "2": 97,
+    "5": 92
+  },
+  "attack_type_performance": {
+    "zero_day": {
+      "mean": 197.0,
+      "std": 182.07498455306813,
+      "count": 10
+    },
+    "malware": {
+      "mean": 49.166666666666664,
+      "std": 39.96943276499625,
+      "count": 9
+    },
+    "directory_traversal": {
+      "mean": 170.2941176470588,
+      "std": 81.99032561717077,
+      "count": 17
+    },
+    "command_injection": {
+      "mean": 158.44444444444446,
+      "std": 107.27753322948132,
+      "count": 9
+    },
+    "ssh_bruteforce": {
+      "mean": 149.13636363636363,
+      "std": 87.40217672270965,
+      "count": 11
+    },
+    "xss": {
+      "mean": 151.9375,
+      "std": 72.20822213397862,
+      "count": 8
+    },
+    "port_scan": {
+      "mean": 118.68181818181819,
+      "std": 58.41437896118975,
+      "count": 11
+    },
+    "sql_injection": {
+      "mean": 118.11538461538461,
+      "std": 71.64473082942878,
+      "count": 13
+    },
+    "ddos": {
+      "mean": 25.291666666666668,
+      "std": 8.362760542362127,
+      "count": 12
+    }
+  }
+}

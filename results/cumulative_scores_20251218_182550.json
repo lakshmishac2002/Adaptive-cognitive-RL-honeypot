@@ -1,0 +1,81 @@
+{
+  "model_path": "models/final_agent.pth",
+  "num_episodes": 200,
+  "timestamp": "2025-12-18T18:25:50.834040",
+  "metric_version": "updated_v2",
+  "cumulative_scores": {
+    "total_reward": 700918.8999999997,
+    "total_intelligence": 14364,
+    "total_engagement_time": 11490,
+    "average_reward": 3504.5944999999983,
+    "average_intelligence": 71.82,
+    "average_engagement": 57.45
+  },
+  "success_rates": {
+    "overall_success_rate": 100.0,
+    "successful_episodes": 200,
+    "failed_episodes": 0,
+    "stealth_success_rate": 100.0,
+    "detection_rate": 0.0
+  },
+  "weighted_score": {
+    "average_score": 81.157711,
+    "median_score": 81.25,
+    "std_score": 0.33602470129292633,
+    "min_score": 79.1572,
+    "max_score": 81.25
+  },
+  "attack_type_success": {
+    "command_injection": {
+      "success_rate": 100.0,
+      "successful": 24,
+      "total": 24
+    },
+    "port_scan": {
+      "success_rate": 100.0,
+      "successful": 21,
+      "total": 21
+    },
+    "ssh_bruteforce": {
+      "success_rate": 100.0,
+      "successful": 22,
+      "total": 22
+    },
+    "malware": {
+      "success_rate": 100.0,
+      "successful": 27,
+      "total": 27
+    },
+    "xss": {
+      "success_rate": 100.0,
+      "successful": 22,
+      "total": 22
+    },
+    "sql_injection": {
+      "success_rate": 100.0,
+      "successful": 18,
+      "total": 18
+    },
+    "ddos": {
+      "success_rate": 100.0,
+      "successful": 22,
+      "total": 22
+    },
+    "directory_traversal": {
+      "success_rate": 100.0,
+      "successful": 24,
+      "total": 24
+    },
+    "zero_day": {
+      "success_rate": 100.0,
+      "successful": 20,
+      "total": 20
+    }
+  },
+  "success_criteria_thresholds": {
+    "engagement_threshold": 20,
+    "intelligence_threshold": 12,
+    "stealth_threshold": 0.75,
+    "reward_threshold": 800
+  }
+}
